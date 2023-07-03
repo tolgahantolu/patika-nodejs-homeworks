@@ -1,22 +1,31 @@
 const express = require('express');
+const { connect } = require('mongoose');
 const ejs = require('ejs');
+
+const Post = require('./models/Post');
+
 const app = express();
 
-// TEMPLATE ENGINE
+//! CONNECT DB
+connect('mongodb://localhost/cleanblog-db', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+//! TEMPLATE ENGINE
 app.set('view engine', 'ejs');
 
-// MIDDLEWARE
+//! MIDDLEWARE
 app.use(express.static('public'));
 
-// ROUTES
-app.get('/', (req, res) => {
-  //  const blog = {
-  //    id: 1,
-  //    title: 'Blog title',
-  //    description: 'Blog description',
-  //  };
-  //  res.send(blog);
-  res.render('index');
+// Form aracılığıyla tarayıcıya gönderilen veriyi okumak için gerekli middleware'ler - (önceden body parser modülü kullanılırdı) 👇
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+//! ROUTES
+app.get('/', async (req, res) => {
+  const posts = await Post.find({});
+  res.render('index', { posts });
 });
 app.get('/post', (req, res) => {
   res.render('post');
@@ -26,6 +35,11 @@ app.get('/about', (req, res) => {
 });
 app.get('/add_post', (req, res) => {
   res.render('add_post');
+});
+
+app.post('/posts', async (req, res) => {
+  await Post.create(req.body);
+  res.redirect('/');
 });
 
 const port = 3000 || process.env.PORT;
