@@ -116,7 +116,15 @@
 								<a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.
 							</p>
 						</div>
+						<div class="col-lg-4 col-md-2 mx-auto">
+							<a href="/posts/edit/<%= post._id %>" class="p-2"
+								style="background-color: #2634ff; color: #fafaf9;">UPDATE</a>
+							<a href="/posts/<%= post._id %>?_method=DELETE"
+								onclick="return confirm('Are you sure to delete this post?')" class="p-2"
+								style="background-color: #ff503f; color: #fafaf9">DELETE</a>
+						</div>
 					</div>
+				</div>
 				</div>
 			</article>
 
